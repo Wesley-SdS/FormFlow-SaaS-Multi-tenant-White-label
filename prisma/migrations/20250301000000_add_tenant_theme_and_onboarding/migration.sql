@@ -1,0 +1,2 @@
+-- Sprint 2: Theme and onboarding columns were included in the initial migration.
+-- This migration file exists to satisfy Prisma's migration history tracking.

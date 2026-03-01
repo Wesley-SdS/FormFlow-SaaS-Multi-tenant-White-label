@@ -111,3 +111,45 @@ model Subscription {
   @@unique([tenantId])
   @@map("subscriptions")
 }
+
+// ─── Sprint 3: Form Builder ───────────────────────────────────────────────────
+
+enum FormStatus {
+  draft
+  published
+  archived
+}
+
+model Form {
+  id          String     @id @default(uuid()) @db.Uuid
+  tenantId    String     @map("tenant_id") @db.Uuid
+  slug        String
+  title       String
+  description String?
+  schema      Json       @default("[]")
+  status      FormStatus @default(draft)
+  publishedAt DateTime?  @map("published_at")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  versions FormVersion[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, status])
+  @@map("forms")
+}
+
+model FormVersion {
+  id          String   @id @default(uuid()) @db.Uuid
+  formId      String   @map("form_id") @db.Uuid
+  tenantId    String   @map("tenant_id") @db.Uuid
+  versionNumber Int    @default(1) @map("version_number")
+  schema      Json
+  publishedAt DateTime @default(now()) @map("published_at")
+
+  form Form @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  @@index([formId])
+  @@index([tenantId])
+  @@map("form_versions")
+}
