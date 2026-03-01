@@ -1,7 +1,27 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Customização do tema FormFlow — pode ser estendida por tenant via CSS variables no ThemeProvider */
-  --font-sans: system-ui, sans-serif;
-  --font-mono: ui-monospace, monospace;
+  --font-sans: system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', monospace;
+}
+
+/*
+  @theme inline: mapeia as CSS variables do tenant (--ff-*) para utilities do Tailwind v4.
+  Permite bg-primary, text-primary, border-primary em qualquer componente.
+  Padrão premium: violeta rico #7c3aed.
+*/
+@theme inline {
+  --color-primary: var(--ff-primary, #7c3aed);
+  --color-secondary: var(--ff-secondary, #a78bfa);
+}
+
+/* Classe reutilizável de input */
+@layer components {
+  .input {
+    @apply block w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white shadow-sm placeholder:text-white/30 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors;
+  }
+
+  .input-light {
+    @apply block w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-900 shadow-sm placeholder:text-zinc-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors;
+  }
 }
