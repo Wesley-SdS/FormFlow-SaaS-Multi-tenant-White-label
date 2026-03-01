@@ -19,9 +19,11 @@ async function main() {
     update: {},
   });
 
+  /** UUID fixo para dev: use no .env como DEV_TENANT_ID (localhost) */
+  const DEV_TENANT_A_ID = 'aaaaaaaa-bbbb-4ccc-dddd-eeeeeeeeeeee';
   const tenant1 = await prisma.tenant.upsert({
     where: { slug: 'tenant-a' },
-    create: { name: 'Tenant A', slug: 'tenant-a' },
+    create: { id: DEV_TENANT_A_ID, name: 'Tenant A', slug: 'tenant-a' },
     update: {},
   });
   const tenant2 = await prisma.tenant.upsert({

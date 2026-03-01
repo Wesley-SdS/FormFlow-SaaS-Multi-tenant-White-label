@@ -23,12 +23,36 @@ enum PlanSlug {
   business
 }
 
+enum ThemeFontFamily {
+  sans
+  serif
+  mono
+}
+
+enum ThemeBorderRadius {
+  sm
+  md
+  lg
+}
+
 model Tenant {
   id        String   @id @default(uuid()) @db.Uuid
   name      String
   slug      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // White-label theme (Sprint 2)
+  primaryColor   String            @default("#2563eb") @map("primary_color")
+  secondaryColor String            @default("#64748b") @map("secondary_color")
+  fontFamily     ThemeFontFamily   @default(sans) @map("font_family")
+  borderRadius   ThemeBorderRadius @default(md) @map("border_radius")
+  logoUrl        String?           @map("logo_url")
+  faviconUrl     String?           @map("favicon_url")
+
+  // Onboarding progress (Sprint 2): 1=dados empresa, 2=tema, 3=convidar membros
+  onboardingStep     Int       @default(1) @map("onboarding_step")
+  onboardingDoneAt   DateTime? @map("onboarding_done_at")
 
   members      TenantMember[]
   subscriptions Subscription[]
