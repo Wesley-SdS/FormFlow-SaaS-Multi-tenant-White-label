@@ -76,6 +76,31 @@ psql --version    # PostgreSQL 14+
 
 ## 🚀 Guia de Instalação
 
+### 0️⃣ Ambiente local com Docker (recomendado)
+
+Subir PostgreSQL e Redis com um comando:
+
+```bash
+# Subir os serviços em background
+docker compose up -d
+
+# Aguardar os serviços ficarem saudáveis (alguns segundos), depois:
+pnpm db:generate
+pnpm db:migrate
+pnpm db:seed
+```
+
+O `.env` já está configurado para usar `postgresql://formflow:formflow@localhost:5432/formflow` e `redis://localhost:6379`.
+
+O `.env` já inclui `DEV_TENANT_ID` com o UUID fixo do tenant de dev (`tenant-a`). Se você rodar o seed do zero (`pnpm db:reset`), esse tenant é criado com esse ID e o localhost funciona sem 404.
+
+```bash
+# Parar os containers
+docker compose down
+```
+
+---
+
 ### 1️⃣ Clonar o Repositório
 
 ```bash
@@ -99,26 +124,21 @@ npm install --ignore-scripts
 cp .env.example .env
 ```
 
-Editar `.env` com suas credenciais:
+Editar `.env` com suas credenciais. **Se usar Docker Compose**, o `.env` já vem com os valores corretos; só falta preencher `DEV_TENANT_ID` após o seed (ver seção "Ambiente local com Docker" acima).
 
 ```bash
-# Banco de Dados
-DATABASE_URL="postgresql://user:password@localhost:5432/formflow"
+# Banco (com Docker: formflow:formflow@localhost:5432/formflow)
+DATABASE_URL="postgresql://formflow:formflow@localhost:5432/formflow"
 
-# Desenvolvimento (opcional)
-DEV_TENANT_ID="550e8400-e29b-41d4-a716-446655440000"
-DEV_TENANT_SLUG="dev-tenant"
-
-# Supabase (opcional)
-NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
-
-# Redis (opcional)
+# Redis (com Docker: localhost:6379)
 REDIS_URL="redis://localhost:6379"
 
-# Stripe (futuro)
-STRIPE_SECRET_KEY=""
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=""
+# App URL
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+
+# Dev: preencher DEV_TENANT_ID após db:seed (tenant com slug tenant-a)
+DEV_TENANT_ID=""
+DEV_TENANT_SLUG="tenant-a"
 ```
 
 ### 4️⃣ Configurar Banco de Dados
@@ -165,6 +185,7 @@ Abrir [localhost:3000](http://localhost:3000) no navegador.
 | `npm run db:migrate` | 📝 Cria nova migração |
 | `npm run db:seed` | 🌱 Popula banco com dados de teste |
 | `npm run db:studio` | 🎨 Abre Prisma Studio (GUI) |
+| `npm run db:reset` | 🔄 Reset completo do banco + migrations + seed (uso: `pnpm db:reset`) |
 
 ---
 
