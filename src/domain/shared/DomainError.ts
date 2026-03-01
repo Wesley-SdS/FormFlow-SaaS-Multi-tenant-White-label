@@ -43,3 +43,59 @@ export class ThemeValidationError extends DomainError {
     super(message);
   }
 }
+
+export class FormNotFoundError extends DomainError {
+  readonly code = 'FORM_NOT_FOUND';
+
+  constructor(formId: string) {
+    super(`Formulário '${formId}' não encontrado ou não pertence a este tenant`);
+  }
+}
+
+export class FormEmptyError extends DomainError {
+  readonly code = 'FORM_EMPTY';
+
+  constructor() {
+    super('O formulário deve ter ao menos 1 campo antes de ser publicado');
+  }
+}
+
+export class FormAlreadyPublishedError extends DomainError {
+  readonly code = 'FORM_ALREADY_PUBLISHED';
+
+  constructor(formId: string) {
+    super(`Formulário '${formId}' já está publicado`);
+  }
+}
+
+export class FieldLabelRequiredError extends DomainError {
+  readonly code = 'FIELD_LABEL_REQUIRED';
+
+  constructor() {
+    super('O campo deve ter um label');
+  }
+}
+
+export class FieldOptionsRequiredError extends DomainError {
+  readonly code = 'FIELD_OPTIONS_REQUIRED';
+
+  constructor(type: string) {
+    super(`Campo do tipo '${type}' deve ter ao menos 2 opções`);
+  }
+}
+
+export class PlanLimitError extends DomainError {
+  readonly code = 'PLAN_LIMIT_EXCEEDED';
+
+  constructor(resource: string) {
+    super(`Limite do plano atingido para: ${resource}`);
+  }
+}
+
+export class ForbiddenError extends DomainError {
+  readonly code = 'FORBIDDEN';
+
+  constructor(message = 'Acesso negado') {
+    super(message);
+  }
+}
