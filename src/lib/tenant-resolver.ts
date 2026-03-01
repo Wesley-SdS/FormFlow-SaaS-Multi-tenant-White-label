@@ -94,3 +94,27 @@ function extractSlugFromHostname(hostname: string): string | null {
   }
   return hostname.split('.')[0]?.toLowerCase() ?? null;
 }
+
+/**
+ * Invalida cache Redis do tenant pelo slug (ex.: após atualizar tema ou domínio).
+ * Chamado por UpdateThemeUseCase e quando tenant atualiza custom domain.
+ */
+export async function invalidateTenantCacheBySlug(slug: string): Promise<void> {
+  const redisUrl = process.env.REDIS_URL;
+  if (!redisUrl) return;
+
+  const baseHost = process.env.NEXT_PUBLIC_APP_URL
+    ? new URL(process.env.NEXT_PUBLIC_APP_URL).hostname
+    : 'formflow.app';
+  const hostname = `${slug}.${baseHost}`;
+  const key = `tenant:hostname:${hostname}`;
+
+  try {
+    const Redis = (await import('ioredis')).default;
+    const redis = new Redis(redisUrl);
+    await redis.del(key);
+    redis.quit();
+  } catch {
+    // ignore cache invalidation errors
+  }
+}
