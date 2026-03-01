@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Customização do tema FormFlow — pode ser estendida por tenant via CSS variables no ThemeProvider */
+  --font-sans: system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
+}
