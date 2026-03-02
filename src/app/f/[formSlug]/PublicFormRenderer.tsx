@@ -15,6 +15,7 @@ export default function PublicFormRenderer({ form, version }: PublicFormRenderer
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleChange = (fieldId: string, value: string | string[] | boolean) => {
     setValues((prev) => ({ ...prev, [fieldId]: value }));
@@ -26,18 +27,26 @@ export default function PublicFormRenderer({ form, version }: PublicFormRenderer
     setError(null);
 
     try {
-      const res = await fetch(`/api/forms/${form.id}/submit`, {
+      // _hp é o campo honeypot (deve estar vazio)
+      const res = await fetch(`/f/${form.slug}/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: values }),
+        body: JSON.stringify({ data: values, _hp: '' }),
       });
 
+      const body = await res.json();
+
       if (!res.ok) {
-        const body = await res.json();
         setError(body.error ?? 'Erro ao enviar formulário');
         return;
       }
 
+      if (body.redirectUrl) {
+        window.location.href = body.redirectUrl;
+        return;
+      }
+
+      setSuccessMessage(body.message ?? 'Obrigado! Sua resposta foi enviada.');
       setSubmitted(true);
     } catch {
       setError('Falha na conexão. Tente novamente.');
@@ -66,7 +75,9 @@ export default function PublicFormRenderer({ form, version }: PublicFormRenderer
             </svg>
           </div>
           <h2 className="text-xl font-semibold text-zinc-900">Resposta enviada!</h2>
-          <p className="mt-2 text-sm text-zinc-500">Obrigado por preencher o formulário.</p>
+          <p className="mt-2 text-sm text-zinc-500">
+            {successMessage ?? 'Obrigado por preencher o formulário.'}
+          </p>
         </div>
       </div>
     );
