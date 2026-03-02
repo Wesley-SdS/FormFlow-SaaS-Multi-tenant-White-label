@@ -18,7 +18,11 @@
     "db:reset": "prisma migrate reset --force",
     "test": "vitest",
     "test:run": "vitest run",
-    "prepare": "husky"
+    "prepare": "husky",
+    "worker:email": "tsx src/infrastructure/queue/email.worker.ts",
+    "worker:export": "tsx src/infrastructure/queue/export.worker.ts",
+    "worker:webhook": "tsx src/infrastructure/queue/webhook.worker.ts",
+    "worker:all": "concurrently \"pnpm worker:email\" \"pnpm worker:export\" \"pnpm worker:webhook\""
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -26,11 +30,15 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@prisma/client": "^6.0.0",
+    "@react-email/components": "^1.0.8",
+    "@react-email/render": "^2.0.4",
     "@supabase/supabase-js": "^2.45.0",
+    "bullmq": "^5.70.1",
     "ioredis": "^5.4.0",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "resend": "^6.9.3",
     "zod": "^3.23.0"
   },
   "devDependencies": {
@@ -40,6 +48,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.0.0",
+    "concurrently": "^9.2.1",
     "eslint": "^9.0.0",
     "eslint-config-next": "^15.0.0",
     "husky": "^9.0.0",
