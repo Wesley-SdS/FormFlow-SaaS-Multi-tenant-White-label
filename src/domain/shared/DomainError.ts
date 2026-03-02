@@ -99,3 +99,38 @@ export class ForbiddenError extends DomainError {
     super(message);
   }
 }
+
+export class FormNotPublishedError extends DomainError {
+  readonly code = 'FORM_NOT_PUBLISHED';
+
+  constructor(slug: string) {
+    super(`Formulário '${slug}' não está disponível para submissão`);
+  }
+}
+
+export class SubmissionValidationError extends DomainError {
+  readonly code = 'SUBMISSION_VALIDATION';
+
+  constructor(
+    message: string,
+    public readonly fieldErrors: { field: string; message: string }[] = []
+  ) {
+    super(message);
+  }
+}
+
+export class RateLimitError extends DomainError {
+  readonly code = 'RATE_LIMIT_EXCEEDED';
+
+  constructor() {
+    super('Muitas tentativas. Aguarde 1 minuto antes de tentar novamente.');
+  }
+}
+
+export class SubmissionLimitError extends DomainError {
+  readonly code = 'SUBMISSION_LIMIT_EXCEEDED';
+
+  constructor() {
+    super('O limite mensal de submissões deste plano foi atingido.');
+  }
+}

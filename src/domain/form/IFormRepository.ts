@@ -13,6 +13,9 @@ export interface UpdateFormDTO {
   title?: string;
   description?: string | null;
   schema?: FormFieldProps[];
+  webhookUrl?: string | null;
+  successMessage?: string | null;
+  redirectUrl?: string | null;
 }
 
 export interface ListFormsOptions {

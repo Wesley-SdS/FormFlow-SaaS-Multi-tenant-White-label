@@ -13,6 +13,9 @@ export interface FormProps {
   publishedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  webhookUrl?: string | null;
+  successMessage?: string | null;
+  redirectUrl?: string | null;
 }
 
 export class Form {
@@ -76,6 +79,16 @@ export class Form {
 
   isArchived(): boolean {
     return this.props.status === 'archived';
+  }
+
+  get webhookUrl(): string | null | undefined {
+    return this.props.webhookUrl;
+  }
+  get successMessage(): string | null | undefined {
+    return this.props.successMessage;
+  }
+  get redirectUrl(): string | null | undefined {
+    return this.props.redirectUrl;
   }
 
   toJSON(): FormProps {

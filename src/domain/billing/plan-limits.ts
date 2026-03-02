@@ -13,3 +13,20 @@ export const PLAN_SUBMISSION_LIMITS: Record<string, number | null> = {
   growth: 10000,
   business: null,
 };
+
+/**
+ * Retorna o plano atual do tenant consultando o banco.
+ * Fallback para 'starter' se não houver assinatura.
+ */
+export async function getTenantPlanSlug(tenantId: string): Promise<string> {
+  try {
+    const { prisma } = await import('@/infrastructure/db/prisma.client');
+    const sub = await prisma.subscription.findUnique({
+      where: { tenantId },
+      include: { plan: true },
+    });
+    return sub?.plan?.slug ?? 'starter';
+  } catch {
+    return 'starter';
+  }
+}
