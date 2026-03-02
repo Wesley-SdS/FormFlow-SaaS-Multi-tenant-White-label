@@ -186,6 +186,14 @@ function FormCard({ form, onDelete, onPublish, deleting }: FormCardProps) {
           </a>
         )}
 
+        {form.status === 'published' && (
+          <Link
+            href={`/dashboard/forms/${form.id}/submissions`}
+            className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100"
+          >
+            Respostas
+          </Link>
+        )}
         <Link
           href={`/dashboard/forms/${form.id}`}
           className="rounded-lg border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
