@@ -29,6 +29,9 @@ function mapToForm(row: {
   publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  webhookUrl?: string | null;
+  successMessage?: string | null;
+  redirectUrl?: string | null;
 }): Form {
   return Form.reconstitute({
     id: row.id,
@@ -41,6 +44,9 @@ function mapToForm(row: {
     publishedAt: row.publishedAt,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
+    webhookUrl: row.webhookUrl ?? null,
+    successMessage: row.successMessage ?? null,
+    redirectUrl: row.redirectUrl ?? null,
   });
 }
 
@@ -86,6 +92,9 @@ export class FormRepository implements IFormRepository {
           ...(dto.schema !== undefined && {
             schema: dto.schema as unknown as Prisma.InputJsonValue,
           }),
+          ...(dto.webhookUrl !== undefined && { webhookUrl: dto.webhookUrl }),
+          ...(dto.successMessage !== undefined && { successMessage: dto.successMessage }),
+          ...(dto.redirectUrl !== undefined && { redirectUrl: dto.redirectUrl }),
         },
       })
     );
