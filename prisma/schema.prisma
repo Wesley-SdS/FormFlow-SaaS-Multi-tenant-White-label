@@ -132,11 +132,36 @@ model Form {
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
 
-  versions FormVersion[]
+  // Sprint 4: Configurações de submissão
+  webhookUrl      String? @map("webhook_url")
+  successMessage  String? @default("Obrigado! Sua resposta foi enviada.") @map("success_message")
+  redirectUrl     String? @map("redirect_url")
+
+  versions    FormVersion[]
+  submissions Submission[]
 
   @@unique([tenantId, slug])
   @@index([tenantId, status])
   @@map("forms")
+}
+
+// ─── Sprint 4: Submissions ────────────────────────────────────────────────────
+
+model Submission {
+  id            String   @id @default(uuid()) @db.Uuid
+  tenantId      String   @map("tenant_id") @db.Uuid
+  formId        String   @map("form_id") @db.Uuid
+  formVersionId String   @map("form_version_id") @db.Uuid
+  data          Json
+  ipHash        String?  @map("ip_hash")
+  userAgent     String?  @map("user_agent")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  form Form @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, formId])
+  @@index([tenantId, createdAt])
+  @@map("submissions")
 }
 
 model FormVersion {
